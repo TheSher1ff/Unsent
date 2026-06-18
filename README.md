@@ -5,4 +5,5 @@ A personal remake of the Unsent Project
 - Through further investigation, its my trial for the database that expired
 - Realistically, I want to keep this site up free and long term
 - After doing some research I've decided to switch backends to Supabase
+- Just took a class in sql so im gonna use it to make the messages database
 
