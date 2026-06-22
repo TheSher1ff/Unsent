@@ -15,24 +15,44 @@ interface MessageCardProps {
   isAdmin?: boolean;
 }
 
+const ICONS = [
+  pinkIcon,
+  blueIcon,
+  greenIcon,
+  yellowIcon,
+  purpleIcon,
+  whiteIcon,
+];
+
 const COLOR_MAP: Record<
   string,
-  { bg: string; text: string; icon: string }
+  { bg: string; text: string }
 > = {
-  "#ef4444": { bg: "bg-[#FFB7B2]", text: "text-[#4A4A4A]", icon: pinkIcon },
-  "#3b82f6": { bg: "bg-[#B2E2F2]", text: "text-[#4A4A4A]", icon: blueIcon },
-  "#10b981": { bg: "bg-[#B2F2BB]", text: "text-[#4A4A4A]", icon: greenIcon },
-  "#f59e0b": { bg: "bg-[#FDFD96]", text: "text-[#4A4A4A]", icon: yellowIcon },
-  "#8b5cf6": { bg: "bg-[#D1B2F2]", text: "text-[#4A4A4A]", icon: purpleIcon },
-  "#18181b": { bg: "bg-white", text: "text-[#4A4A4A]", icon: whiteIcon },
+  "#ef4444": { bg: "bg-[#FFB7B2]", text: "text-black" },
+  "#3b82f6": { bg: "bg-[#B2E2F2]", text: "text-black" },
+  "#10b981": { bg: "bg-[#B2F2BB]", text: "text-black" },
+  "#f59e0b": { bg: "bg-[#FDFD96]", text: "text-black" },
+  "#8b5cf6": { bg: "bg-[#D1B2F2]", text: "text-black" },
+  "#18181b": { bg: "bg-white", text: "text-black" },
 };
 
-export function MessageCard({ message, index, isAdmin }: MessageCardProps) {
+export function MessageCard({
+  message,
+  index,
+  isAdmin,
+}: MessageCardProps) {
   const theme =
     COLOR_MAP[message.color] ??
-    { bg: "bg-white", text: "text-[#4A4A4A]", icon: whiteIcon };
+    {
+      bg: "bg-white",
+      text: "text-black",
+    };
 
   const splatClass = `paint-splat-${(index % 4) + 1}`;
+
+  // Consistent random image based on message ID
+  const randomIcon =
+    ICONS[Math.abs(message.id) % ICONS.length];
 
   async function handleDelete() {
     if (!confirm("Delete permanently?")) return;
@@ -51,7 +71,10 @@ export function MessageCard({ message, index, isAdmin }: MessageCardProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.05,
+      }}
       className={cn(
         "relative p-8 flex flex-col justify-between overflow-hidden group transition-all duration-500 neon-glow h-full min-h-[300px]",
         splatClass,
@@ -59,7 +82,6 @@ export function MessageCard({ message, index, isAdmin }: MessageCardProps) {
         theme.text
       )}
     >
-      {/* ADMIN DELETE BUTTON */}
       {isAdmin && (
         <button
           onClick={handleDelete}
@@ -71,23 +93,25 @@ export function MessageCard({ message, index, isAdmin }: MessageCardProps) {
       )}
 
       <div className="relative z-10 pr-16">
-        <h3 className="font-display text-2xl font-bold mb-4">
+        <h3 className="font-display text-2xl font-bold mb-4 text-black">
           To: {message.toName}
         </h3>
 
-        <p className="font-sans text-lg leading-relaxed font-medium line-clamp-6 opacity-90">
+        <p className="font-sans text-lg leading-relaxed font-medium line-clamp-6 text-black">
           {message.content}
         </p>
       </div>
 
       <img
-        src={theme.icon}
+        src={randomIcon}
         alt=""
         className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
       />
 
-      <div className="relative z-10 mt-4 opacity-60 text-xs font-mono uppercase tracking-widest">
-        {new Date(message.createdAt ?? Date.now()).toLocaleDateString(undefined, {
+      <div className="relative z-10 mt-4 opacity-60 text-xs font-mono uppercase tracking-widest text-black">
+        {new Date(
+          message.createdAt ?? Date.now()
+        ).toLocaleDateString(undefined, {
           month: "long",
           day: "numeric",
           year: "numeric",
