@@ -1,6 +1,6 @@
 import { db } from "./db";
 import { messages, type Message, type InsertMessage } from "@shared/schema";
-import { eq, desc, like } from "drizzle-orm";
+import { eq, desc, ilike } from "drizzle-orm";
 
 export interface IStorage {
   getMessages(search?: string): Promise<Message[]>;
@@ -16,7 +16,7 @@ export class DatabaseStorage implements IStorage {
       return await db
         .select()
         .from(messages)
-        .where(like(messages.toName, `%${search}%`))
+        .where(ilike(messages.toName, `%${search}%`))
         .orderBy(desc(messages.createdAt));
     }
 
