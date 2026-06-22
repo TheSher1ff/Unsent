@@ -10,12 +10,16 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const EMOTIONS = [
-  { color: "#ef4444", label: "Angry", class: "bg-[#FFB7B2]" },
-  { color: "#3b82f6", label: "Sad", class: "bg-[#B2E2F2]" },
-  { color: "#10b981", label: "Peaceful", class: "bg-[#B2F2BB]" },
-  { color: "#f59e0b", label: "Nostalgic", class: "bg-[#FDFD96]" },
-  { color: "#8b5cf6", label: "In Love", class: "bg-[#D1B2F2]" },
-  { color: "#18181b", label: "Empty", class: "bg-[#FFFFFF]" },
+  { color: "#ffffff", label: "White", class: "bg-white" },
+  { color: "#FFB7B2", label: "Blush", class: "bg-[#FFB7B2]" },
+  { color: "#B2E2F2", label: "Sky", class: "bg-[#B2E2F2]" },
+  { color: "#B2F2BB", label: "Mint", class: "bg-[#B2F2BB]" },
+  { color: "#FDFD96", label: "Butter", class: "bg-[#FDFD96]" },
+  { color: "#D1B2F2", label: "Lavender", class: "bg-[#D1B2F2]" },
+  { color: "#FFD6A5", label: "Peach", class: "bg-[#FFD6A5]" },
+  { color: "#CDEAC0", label: "Sage", class: "bg-[#CDEAC0]" },
+  { color: "#A9DEF9", label: "Baby Blue", class: "bg-[#A9DEF9]" },
+  { color: "#FFC6FF", label: "Pink", class: "bg-[#FFC6FF]" },
 ];
 
 export function ComposeModal() {
@@ -79,35 +83,35 @@ export function ComposeModal() {
               className="space-y-6"
             >
               <div>
-                <label className="text-white/60 text-sm font-medium uppercase tracking-widest mb-2 block">
+                <label className="text-black/60 text-sm font-medium uppercase tracking-widest mb-2 block">
                   To Whom?
                 </label>
                 <Input
                   value={toName}
                   onChange={(e) => setToName(e.target.value)}
                   placeholder="Name..."
-                  className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 text-4xl font-display text-white placeholder:text-white/20 focus-visible:ring-0 focus-visible:border-white h-auto py-2"
+                  className="bg-transparent border-0 border-b border-black/20 rounded-none px-0 text-4xl font-display text-black placeholder:text-black/30 focus-visible:ring-0 focus-visible:border-black h-auto py-2"
                   maxLength={50}
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="text-white/60 text-sm font-medium uppercase tracking-widest mb-2 block">
+                <label className="text-black/60 text-sm font-medium uppercase tracking-widest mb-2 block">
                   Your Message
                 </label>
                 <Textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Type your unsent message here..."
-                  className="bg-transparent border-none resize-none px-0 text-xl font-sans text-white placeholder:text-white/20 focus-visible:ring-0 min-h-[200px]"
+                  className="bg-transparent border-none resize-none px-0 text-xl font-sans text-black placeholder:text-black/30 focus-visible:ring-0 min-h-[200px]"
                   maxLength={500}
                 />
               </div>
             </motion.div>
           </div>
 
-          <div className="p-6 bg-white/20 backdrop-blur-sm border-t border-white/40 flex items-center justify-between">
+          <div className="p-6 bg-white border-t border-black/10 flex items-center justify-between"
             <div className="flex gap-3">
               {EMOTIONS.map((emotion) => (
                 <button
