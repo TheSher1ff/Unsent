@@ -6,4 +6,6 @@ A personal remake of the Unsent Project
 - Realistically, I want to keep this site up free and long term
 - After doing some research I've decided to switch backends to Supabase
 - Just took a class in sql so im gonna use it to make the messages database
+- One annoying thing about rendor is thay it goes down with inactivity
+- So I've Setup uptime robot to keep the site active
 
