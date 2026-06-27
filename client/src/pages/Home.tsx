@@ -33,13 +33,18 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
-      <div className="bg-texture" />
+    <div className="min-h-screen bg-background text-foreground pb-20 relative">
+      {/* FIXED: Transformed bg-texture into a layout-filling underlay 
+        that won't shift out of frame during scrolls
+      */}
+      <div className="bg-texture fixed inset-0 z-0 pointer-events-none" />
 
+      {/* Header handles z-40 context internally */}
       <Header onSearch={handleSearch} />
 
       <div className="h-32 md:h-40" />
 
+      {/* Elevated content safely above the fixed background underlay using z-10 */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* WIPE VISUAL DECK */}
@@ -74,7 +79,7 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="py-32 text-center bg-background"
+                className="py-32 text-center bg-transparent"
               >
                 <p className="font-display text-3xl text-muted-foreground">
                   The deck is silent.
@@ -95,7 +100,7 @@ export default function Home() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="col-span-full py-32 text-center bg-background"
+                    className="col-span-full py-32 text-center bg-transparent"
                   >
                     <p className="font-display text-3xl text-muted-foreground">
                       No messages found.
