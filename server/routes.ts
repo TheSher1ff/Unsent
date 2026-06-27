@@ -140,7 +140,7 @@ async function seedDatabase() {
       await storage.createMessage({
         toName: "Finn",
         content: "I still think of you when I eat pancakes, I miss your pancakes",
-        color: "#18181b",
+        color: "#b2f2bb",
         imageUrl: "/images/posts/8.png",
       });
 
