@@ -44,7 +44,7 @@ export function MessageCard({
     await fetch(`/api/messages/${message.id}`, {
       method: "DELETE",
       headers: {
-        "x-admin-key": adminKey,
+        "x-admin-key": import.meta.env.ADMIN_KEY,
       },
     });
 
