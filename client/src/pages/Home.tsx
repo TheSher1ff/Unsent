@@ -19,7 +19,7 @@ export default function Home() {
     if (value.startsWith(ADMIN_TRIGGER)) {
       const pwd = value.replace(ADMIN_TRIGGER, "").trim();
 
-      if (pwd === import.meta.env.VITE_ADMIN_PASSWORD) {
+      if (pwd === import.meta.env.ADMIN_KEY) {
         setIsAdmin(true);
         setSearch("");
         return;
