@@ -103,21 +103,21 @@ async function seedDatabase() {
         toName: "Mark",
         content: "I saw you in my dream again",
         color: "#3b82f6",
-        imageUrl: null, // <-- Explicitly added for structural safety
+        imageUrl: "/images/posts/1.png",
       });
 
       await storage.createMessage({
         toName: "Jess",
         content: "It's been so long, I hope you moved on",
         color: "#ef4444",
-        imageUrl: null, // <-- Explicitly added for structural safety
+        imageUrl: "/images/posts/7.png",
       });
 
       await storage.createMessage({
         toName: "Finn",
         content: "I still think of you when I eat pancakes, I miss your pancakes",
         color: "#18181b",
-        imageUrl: null, // <-- Explicitly added for structural safety
+        imageUrl: "/images/posts/8.png",
       });
 
       console.log("✅ Database seeded");
