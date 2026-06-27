@@ -7,7 +7,8 @@ export const messages = pgTable("messages", {
   toName: text("to_name").notNull(),
   content: text("content").notNull(),
   color: text("color").notNull(), // Hex code or color class
-  createdAt: timestamp("created_at").defaultNow(),
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertMessageSchema = createInsertSchema(messages).pick({
