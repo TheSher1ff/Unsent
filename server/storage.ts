@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { messages, type Message, type InsertMessage } from "@shared/schema";
 import { eq, desc, ilike } from "drizzle-orm";
+import { postImages } from "../client/src/lib/postImages";
 
 export interface IStorage {
   getMessages(search?: string): Promise<Message[]>;
@@ -34,13 +35,20 @@ export class DatabaseStorage implements IStorage {
     return message;
   }
 
-  async createMessage(insertMessage: InsertMessage): Promise<Message> {
-    const [message] = await db
-      .insert(messages)
-      .values(insertMessage)
-      .returning();
-    return message;
-  }
+async createMessage(insertMessage: InsertMessage): Promise<Message> {
+  const randomImage =
+    postImages[Math.floor(Math.random() * postImages.length)];
+
+  const [message] = await db
+    .insert(messages)
+    .values({
+      ...insertMessage,
+      imageUrl: randomImage,
+    })
+    .returning();
+
+  return message;
+}
 
   async deleteMessage(id: number): Promise<void> {
     await db.delete(messages).where(eq(messages.id, id));
