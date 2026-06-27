@@ -84,7 +84,7 @@ export function MessageCard({
         <img
           src={message.imageUrl}
           alt=""
-          className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
+          className="absolute bottom-4 right-4 w-24 h-24 object-cover opacity-50 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none rounded-xl"
           onError={(e) => {
             // Failsafe in case a legacy/invalid string route is hit
             (e.target as HTMLImageElement).style.display = 'none';
