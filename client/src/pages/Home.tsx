@@ -15,17 +15,31 @@ export default function Home() {
 
   const { data: messages, isLoading, error } = useMessages(search);
 
-  function handleSearch(value: string) {
+  // Converted to async to securely hit our backend serverless function
+  async function handleSearch(value: string) {
     if (value.startsWith(ADMIN_TRIGGER)) {
       const pwd = value.replace(ADMIN_TRIGGER, "").trim();
 
-      if (pwd === import.meta.env.ADMIN_KEY) {
-        setIsAdmin(true);
-        setSearch("");
-        return;
-      }
+      try {
+        const response = await fetch("/api/admin/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password: pwd }),
+        });
 
-      alert("Wrong password");
+        if (response.ok) {
+          setIsAdmin(true);
+          setSearch("");
+          return;
+        }
+
+        alert("Wrong password");
+      } catch (err) {
+        console.error("❌ Admin verification failed:", err);
+        alert("An error occurred during verification. Check your logs.");
+      }
       return;
     }
 
