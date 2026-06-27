@@ -4,8 +4,11 @@ A personal remake of the Unsent Project
 - Reviving this project, created it as a gift for someone but I used render as a backend and my trial is over, so its non-    functioning
 - Through further investigation, its my trial for the database that expired
 - Realistically, I want to keep this site up free and long term
-- After doing some research I've decided to switch backends to Supabase
+- After doing some research I've decided to switch database to Supabase
 - Just took a class in sql so im gonna use it to make the messages database
 - One annoying thing about rendor is thay it goes down with inactivity
 - So I've Setup uptime robot to keep the site active
+- Which did not work because Render has detection for ping automation
+- So I'm switching from rendor to vercel, because the load time after render sleeps is tragically long
+- To do this I need to convert my entire project into a Vercel native
 
