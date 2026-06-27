@@ -111,7 +111,7 @@ export function ComposeModal() {
             </motion.div>
           </div>
 
-          <div className="p-6 bg-white border-t border-black/10 flex items-center justify-between"
+          <div className="p-6 bg-white border-t border-black/10 flex items-center justify-between">
             <div className="flex gap-3">
               {EMOTIONS.map((emotion) => (
                 <button
