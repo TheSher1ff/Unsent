@@ -76,14 +76,16 @@ export function MessageCard({
       )}
 
       <div className="relative z-10 pr-16">
-        <h3 className="font-display text-2xl font-bold mb-4 text-black">
+        <h3 className={cn("font-display text-2xl font-bold mb-4", theme.text)}>
           To: {message.toName}
         </h3>
 
-        <p className="font-sans text-lg leading-relaxed font-medium line-clamp-6 text-black">
+        <p className={cn("font-sans text-lg leading-relaxed font-medium line-clamp-6", theme.text)}>
           {message.content}
         </p>
       </div>
+
+      
 
       {message.imageUrl && (
         <img
