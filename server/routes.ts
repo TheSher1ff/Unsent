@@ -10,16 +10,13 @@ export async function registerRoutes(
 ): Promise<Server> {
 
   // Generate a dynamic session token using a piece of your ADMIN_KEY hash.
-  // This keeps your actual master password completely hidden out of subsequent requests.
   const ADMIN_SESSION_TOKEN = "session_auth_" + Buffer.from(process.env.ADMIN_KEY || "fallback").toString("hex").slice(0, 15);
 
   /* ---------------- BULLETPROOF ADMIN VERIFICATION ---------------- */
   app.post("/api/admin/verify", (req, res) => {
     const { password } = req.body;
 
-    // Use process.env.ADMIN_KEY which lives safely on Vercel's backend container
     if (process.env.ADMIN_KEY && password === process.env.ADMIN_KEY) {
-      // Respond with the transient token string instead of the raw password
       return res.json({ success: true, token: ADMIN_SESSION_TOKEN });
     }
 
@@ -49,9 +46,20 @@ export async function registerRoutes(
     try {
       const input = api.messages.create.input.parse(req.body);
 
-      // FIX: Force incoming color strings to completely lowercase before database write
+      // Map incoming names to matching color hex codes in case your picker sends emotions
       if (input.color) {
-        input.color = input.color.toLowerCase().trim();
+        let normalizedColor = input.color.toLowerCase().trim();
+
+        if (normalizedColor === "angry" || normalizedColor === "sad") {
+          normalizedColor = "#ef4444";
+        } else if (normalizedColor === "nostalgic") {
+          normalizedColor = "#3b82f6";
+        }
+
+        input.color = normalizedColor;
+      } else {
+        // Safe default fallback color if property is totally missing
+        input.color = "#18181b";
       }
 
       const message = await storage.createMessage(input);
@@ -73,7 +81,6 @@ export async function registerRoutes(
 
   /* ---------------- DELETE SINGLE MESSAGE (ADMIN) ---------------- */
   app.delete("/api/messages/:id", async (req, res) => {
-    // Validate request header directly against the secure token signatures
     if (req.headers["x-admin-key"] !== ADMIN_SESSION_TOKEN) {
       return res.status(403).json({ message: "Forbidden" });
     }
@@ -89,7 +96,6 @@ export async function registerRoutes(
 
   /* ---------------- WIPE DATABASE (ADMIN) ---------------- */
   app.delete("/api/admin/wipe", async (req, res) => {
-    // Validate request header directly against the secure token signatures
     if (req.headers["x-admin-key"] !== ADMIN_SESSION_TOKEN) {
       return res.status(403).json({ message: "Forbidden" });
     }
@@ -116,6 +122,7 @@ async function seedDatabase() {
     const existingMessages = await storage.getMessages();
 
     if (existingMessages.length === 0) {
+      // Ensured all seed color keys are lowercased right out of the box
       await storage.createMessage({
         toName: "Mark",
         content: "I saw you in my dream again",
@@ -137,7 +144,7 @@ async function seedDatabase() {
         imageUrl: "/images/posts/8.png",
       });
 
-      console.log("✅ Database seeded");
+      console.log("✅ Database seeded neatly");
     }
   } catch (err) {
     console.error("❌ SEED DATABASE ERROR:", err);
