@@ -103,7 +103,7 @@ export function MessageCard({
       </div>
 
       <img
-        src={randomIcon}
+        src={message.imageUrl}
         alt=""
         className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
       />
