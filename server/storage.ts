@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { messages, type Message, type InsertMessage } from "@shared/schema";
+import { messages, type Message, type InsertMessage } from "../shared/schema";
 import { eq, desc, ilike } from "drizzle-orm";
 import { postImages } from "../client/src/lib/postImages";
 
