@@ -8,7 +8,7 @@ interface MessageCardProps {
   isAdmin?: boolean;
 }
 
-// Convert this map to provide pure raw hex values for the custom pastel themes
+// Map keys must remain entirely lowercase to match normalized lookups
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {
   "#ef4444": { bg: "#FFB7B2", text: "text-black" },
   "#3b82f6": { bg: "#B2E2F2", text: "text-black" },
@@ -23,8 +23,11 @@ export function MessageCard({
   index,
   isAdmin,
 }: MessageCardProps) {
+  // Normalize the incoming color code string to lowercase for bulletproof lookups
+  const normalizedColor = (message.color || "").toLowerCase().trim();
+
   const theme =
-    COLOR_MAP[message.color] ??
+    COLOR_MAP[normalizedColor] ??
     {
       bg: "#FFFFFF",
       text: "text-black",
@@ -35,7 +38,6 @@ export function MessageCard({
   async function handleDelete() {
     if (!confirm("Delete permanently?")) return;
 
-    // We pass a prompt input rather than baking the raw secret into the JavaScript source asset bundle
     const adminKey = prompt("Enter Admin Password:");
     if (!adminKey) return;
 
@@ -62,7 +64,7 @@ export function MessageCard({
         splatClass,
         theme.text
       )}
-      style={{ backgroundColor: theme.bg }} // <-- Handles the dynamic colors flawlessly in production
+      style={{ backgroundColor: theme.bg }}
     >
       {isAdmin && (
         <button
@@ -102,7 +104,7 @@ export function MessageCard({
           month: "long",
           day: "numeric",
           year: "numeric",
-          })}
+        })}
       </div>
     </motion.div>
   );
