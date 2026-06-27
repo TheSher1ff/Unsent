@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build client/ --outDir client/dist", 
-    "start": "NODE_ENV=production node dist/index.cjs",
-    "check": "typescript --noEmit",
-    "db:push": "drizzle-kit push"
-  },
+  "dev": "NODE_ENV=development tsx server/index.ts",
+  "build": "vite build client/ --outDir dist", 
+  "start": "NODE_ENV=production node dist/index.cjs",
+  "check": "typescript --noEmit",
+  "db:push": "drizzle-kit push"
+},
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
