@@ -9,16 +9,21 @@ interface MessageCardProps {
   onDelete?: (id: number) => void; // Unlocks instant execution with parent key state
 }
 
-// Map keys must remain entirely lowercase to match normalized lookups
+// Map keys must remain entirely lowercase to match database storage formatting
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {
+  "#ffb7b2": { bg: "#FFB7B2", text: "text-black" }, // Blush
+  "#b2e2f2": { bg: "#B2E2F2", text: "text-black" }, // Sky
+  "#b2f2bb": { bg: "#B2F2BB", text: "text-black" }, // Mint
+  "#fdfd96": { bg: "#FDFD96", text: "text-black" }, // Butter
+  "#d1b2f2": { bg: "#D1B2F2", text: "text-black" }, // Lavender
+  "#ffd6a5": { bg: "#FFD6A5", text: "text-black" }, // Peach
+
+  // System/Seed fallbacks
+  "#18181b": { bg: "#18181b", text: "text-white" },
   "#ef4444": { bg: "#FFB7B2", text: "text-black" },
   "#3b82f6": { bg: "#B2E2F2", text: "text-black" },
   "#10b981": { bg: "#B2F2BB", text: "text-black" },
-  "#f59e0b": { bg: "#FDFD96", text: "text-black" },
-  "#8b5cf6": { bg: "#D1B2F2", text: "text-black" },
-  "#18181b": { bg: "#FFFFFF", text: "text-black" },
 };
-
 export function MessageCard({
   message,
   index,
