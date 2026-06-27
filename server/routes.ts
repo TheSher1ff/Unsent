@@ -48,6 +48,12 @@ export async function registerRoutes(
   app.post(api.messages.create.path, async (req, res) => {
     try {
       const input = api.messages.create.input.parse(req.body);
+
+      // FIX: Force incoming color strings to completely lowercase before database write
+      if (input.color) {
+        input.color = input.color.toLowerCase().trim();
+      }
+
       const message = await storage.createMessage(input);
       res.status(201).json(message);
     } catch (err) {
