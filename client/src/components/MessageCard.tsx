@@ -8,13 +8,14 @@ interface MessageCardProps {
   isAdmin?: boolean;
 }
 
+// Convert this map to provide pure raw hex values for the custom pastel themes
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {
-  "#ef4444": { bg: "bg-[#FFB7B2]", text: "text-black" },
-  "#3b82f6": { bg: "bg-[#B2E2F2]", text: "text-black" },
-  "#10b981": { bg: "bg-[#B2F2BB]", text: "text-black" },
-  "#f59e0b": { bg: "bg-[#FDFD96]", text: "text-black" },
-  "#8b5cf6": { bg: "bg-[#D1B2F2]", text: "text-black" },
-  "#18181b": { bg: "bg-white", text: "text-black" },
+  "#ef4444": { bg: "#FFB7B2", text: "text-black" },
+  "#3b82f6": { bg: "#B2E2F2", text: "text-black" },
+  "#10b981": { bg: "#B2F2BB", text: "text-black" },
+  "#f59e0b": { bg: "#FDFD96", text: "text-black" },
+  "#8b5cf6": { bg: "#D1B2F2", text: "text-black" },
+  "#18181b": { bg: "#FFFFFF", text: "text-black" },
 };
 
 export function MessageCard({
@@ -25,7 +26,7 @@ export function MessageCard({
   const theme =
     COLOR_MAP[message.color] ??
     {
-      bg: "bg-white",
+      bg: "#FFFFFF",
       text: "text-black",
     };
 
@@ -34,10 +35,14 @@ export function MessageCard({
   async function handleDelete() {
     if (!confirm("Delete permanently?")) return;
 
+    // We pass a prompt input rather than baking the raw secret into the JavaScript source asset bundle
+    const adminKey = prompt("Enter Admin Password:");
+    if (!adminKey) return;
+
     await fetch(`/api/messages/${message.id}`, {
       method: "DELETE",
       headers: {
-        "x-admin-key": import.meta.env.VITE_ADMIN_PASSWORD,
+        "x-admin-key": adminKey,
       },
     });
 
@@ -55,9 +60,9 @@ export function MessageCard({
       className={cn(
         "relative p-8 flex flex-col justify-between overflow-hidden group transition-all duration-500 neon-glow h-full min-h-[300px]",
         splatClass,
-        theme.bg,
         theme.text
       )}
+      style={{ backgroundColor: theme.bg }} // <-- Handles the dynamic colors flawlessly in production
     >
       {isAdmin && (
         <button
@@ -79,14 +84,12 @@ export function MessageCard({
         </p>
       </div>
 
-      {/* NEW: Displays the random image route assigned by your server storage */}
       {message.imageUrl && (
         <img
           src={message.imageUrl}
           alt=""
           className="absolute bottom-4 right-4 w-24 h-24 object-cover opacity-50 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none rounded-xl"
           onError={(e) => {
-            // Failsafe in case a legacy/invalid string route is hit
             (e.target as HTMLImageElement).style.display = 'none';
           }}
         />
@@ -99,7 +102,7 @@ export function MessageCard({
           month: "long",
           day: "numeric",
           year: "numeric",
-        })}
+          })}
       </div>
     </motion.div>
   );
