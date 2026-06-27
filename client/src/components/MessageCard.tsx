@@ -24,10 +24,7 @@ const ICONS = [
   whiteIcon,
 ];
 
-const COLOR_MAP: Record<
-  string,
-  { bg: string; text: string }
-> = {
+const COLOR_MAP: Record<string, { bg: string; text: string }> = {
   "#ef4444": { bg: "bg-[#FFB7B2]", text: "text-black" },
   "#3b82f6": { bg: "bg-[#B2E2F2]", text: "text-black" },
   "#10b981": { bg: "bg-[#B2F2BB]", text: "text-black" },
@@ -50,9 +47,8 @@ export function MessageCard({
 
   const splatClass = `paint-splat-${(index % 4) + 1}`;
 
-  // Consistent random image based on message ID
-  const randomIcon =
-    ICONS[Math.abs(message.id) % ICONS.length];
+  // Use the message id to pick a consistent icon from your imported local assets array
+  const displayIcon = ICONS[Math.abs(message.id) % ICONS.length];
 
   async function handleDelete() {
     if (!confirm("Delete permanently?")) return;
@@ -102,11 +98,14 @@ export function MessageCard({
         </p>
       </div>
 
-      <img
-        src={message.imageUrl}
-        alt=""
-        className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
-      />
+      {/* FIXED: Using displayIcon (the resolved asset file path) instead of message.imageUrl string */}
+      {displayIcon && (
+        <img
+          src={displayIcon}
+          alt=""
+          className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
+        />
+      )}
 
       <div className="relative z-10 mt-4 opacity-60 text-xs font-mono uppercase tracking-widest text-black">
         {new Date(
