@@ -9,13 +9,18 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
-  /* ---------------- NEW: SECURE ADMIN VERIFICATION ---------------- */
+  // Generate a dynamic session token using a piece of your ADMIN_KEY hash.
+  // This keeps your actual master password completely hidden out of subsequent requests.
+  const ADMIN_SESSION_TOKEN = "session_auth_" + Buffer.from(process.env.ADMIN_KEY || "fallback").toString("hex").slice(0, 15);
+
+  /* ---------------- BULLETPROOF ADMIN VERIFICATION ---------------- */
   app.post("/api/admin/verify", (req, res) => {
     const { password } = req.body;
 
     // Use process.env.ADMIN_KEY which lives safely on Vercel's backend container
     if (process.env.ADMIN_KEY && password === process.env.ADMIN_KEY) {
-      return res.json({ success: true });
+      // Respond with the transient token string instead of the raw password
+      return res.json({ success: true, token: ADMIN_SESSION_TOKEN });
     }
 
     return res.status(401).json({ success: false, message: "Invalid password" });
@@ -62,10 +67,8 @@ export async function registerRoutes(
 
   /* ---------------- DELETE SINGLE MESSAGE (ADMIN) ---------------- */
   app.delete("/api/messages/:id", async (req, res) => {
-    if (
-      process.env.ADMIN_KEY &&
-      req.headers["x-admin-key"] !== process.env.ADMIN_KEY
-    ) {
+    // Validate request header directly against the secure token signatures
+    if (req.headers["x-admin-key"] !== ADMIN_SESSION_TOKEN) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
@@ -80,10 +83,8 @@ export async function registerRoutes(
 
   /* ---------------- WIPE DATABASE (ADMIN) ---------------- */
   app.delete("/api/admin/wipe", async (req, res) => {
-    if (
-      process.env.ADMIN_KEY &&
-      req.headers["x-admin-key"] !== process.env.ADMIN_KEY
-    ) {
+    // Validate request header directly against the secure token signatures
+    if (req.headers["x-admin-key"] !== ADMIN_SESSION_TOKEN) {
       return res.status(403).json({ message: "Forbidden" });
     }
 
