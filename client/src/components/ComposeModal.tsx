@@ -10,16 +10,12 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const EMOTIONS = [
-  { color: "#ffffff", label: "White", class: "bg-white" },
   { color: "#FFB7B2", label: "Blush", class: "bg-[#FFB7B2]" },
   { color: "#B2E2F2", label: "Sky", class: "bg-[#B2E2F2]" },
   { color: "#B2F2BB", label: "Mint", class: "bg-[#B2F2BB]" },
   { color: "#FDFD96", label: "Butter", class: "bg-[#FDFD96]" },
   { color: "#D1B2F2", label: "Lavender", class: "bg-[#D1B2F2]" },
   { color: "#FFD6A5", label: "Peach", class: "bg-[#FFD6A5]" },
-  { color: "#CDEAC0", label: "Sage", class: "bg-[#CDEAC0]" },
-  { color: "#A9DEF9", label: "Baby Blue", class: "bg-[#A9DEF9]" },
-  { color: "#FFC6FF", label: "Pink", class: "bg-[#FFC6FF]" },
 ];
 
 export function ComposeModal() {
