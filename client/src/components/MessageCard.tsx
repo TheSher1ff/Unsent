@@ -2,27 +2,11 @@ import { motion } from "framer-motion";
 import type { MessageResponse } from "@shared/routes";
 import { cn } from "@/lib/utils";
 
-import pinkIcon from "@assets/IMG_4274_1768329071198.png";
-import blueIcon from "@assets/IMG_4275_1768329071198.png";
-import greenIcon from "@assets/IMG_4276_1768329071198.png";
-import yellowIcon from "@assets/IMG_4277_1768329071198.png";
-import purpleIcon from "@assets/IMG_4278_1768329071198.png";
-import whiteIcon from "@assets/IMG_4276_1768329071198.png";
-
 interface MessageCardProps {
   message: MessageResponse;
   index: number;
   isAdmin?: boolean;
 }
-
-const ICONS = [
-  pinkIcon,
-  blueIcon,
-  greenIcon,
-  yellowIcon,
-  purpleIcon,
-  whiteIcon,
-];
 
 const COLOR_MAP: Record<string, { bg: string; text: string }> = {
   "#ef4444": { bg: "bg-[#FFB7B2]", text: "text-black" },
@@ -46,9 +30,6 @@ export function MessageCard({
     };
 
   const splatClass = `paint-splat-${(index % 4) + 1}`;
-
-  // Use the message id to pick a consistent icon from your imported local assets array
-  const displayIcon = ICONS[Math.abs(message.id) % ICONS.length];
 
   async function handleDelete() {
     if (!confirm("Delete permanently?")) return;
@@ -98,12 +79,16 @@ export function MessageCard({
         </p>
       </div>
 
-      {/* FIXED: Using displayIcon (the resolved asset file path) instead of message.imageUrl string */}
-      {displayIcon && (
+      {/* NEW: Displays the random image route assigned by your server storage */}
+      {message.imageUrl && (
         <img
-          src={displayIcon}
+          src={message.imageUrl}
           alt=""
           className="absolute bottom-4 right-4 w-20 h-20 object-contain opacity-40 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none rounded-full"
+          onError={(e) => {
+            // Failsafe in case a legacy/invalid string route is hit
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
         />
       )}
 
