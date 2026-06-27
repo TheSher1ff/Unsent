@@ -9,6 +9,18 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  /* ---------------- NEW: SECURE ADMIN VERIFICATION ---------------- */
+  app.post("/api/admin/verify", (req, res) => {
+    const { password } = req.body;
+
+    // Use process.env.ADMIN_KEY which lives safely on Vercel's backend container
+    if (process.env.ADMIN_KEY && password === process.env.ADMIN_KEY) {
+      return res.json({ success: true });
+    }
+
+    return res.status(401).json({ success: false, message: "Invalid password" });
+  });
+
   /* ---------------- LIST MESSAGES ---------------- */
   app.get(api.messages.list.path, async (req, res) => {
     const search = req.query.search as string | undefined;
@@ -30,8 +42,6 @@ export async function registerRoutes(
   /* ---------------- CREATE MESSAGE ---------------- */
   app.post(api.messages.create.path, async (req, res) => {
     try {
-      // Zod validation parses the payload. 
-      // Make sure your shared/routes.ts file's Zod schema includes: imageUrl: z.string().url().optional().nullable()
       const input = api.messages.create.input.parse(req.body);
       const message = await storage.createMessage(input);
       res.status(201).json(message);
