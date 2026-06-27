@@ -11,11 +11,11 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: false }));
 
-// Pre-register the routes to the app instance cleanly
 const dummyServer = createServer(app);
+
+// Pre-register your application routes
 registerRoutes(dummyServer, app).catch((err) => {
-  console.error("Failed to register serverless routes:", err);
+  console.error("Serverless route registration failed:", err);
 });
 
-// Export the application instance directly for Vercel's serverless handler
 export default app;
