@@ -36,14 +36,27 @@ export class DatabaseStorage implements IStorage {
   }
 
 async createMessage(insertMessage: InsertMessage): Promise<Message> {
-  const randomImage =
-    postImages[Math.floor(Math.random() * postImages.length)];
+  // Fallback array directly inside the function scope to guarantee it's never undefined
+  const localPostImages = [
+    "/images/posts/1.png",
+    "/images/posts/2.png",
+    "/images/posts/3.png",
+    "/images/posts/4.png",
+    "/images/posts/5.png",
+    "/images/posts/6.png",
+    "/images/posts/7.png",
+    "/images/posts/8.png",
+  ];
+
+  const randomImage = localPostImages[Math.floor(Math.random() * localPostImages.length)];
 
   const [message] = await db
     .insert(messages)
     .values({
-      ...insertMessage,
-      imageUrl: randomImage,
+      toName: insertMessage.toName,
+      content: insertMessage.content,
+      color: insertMessage.color,
+      imageUrl: randomImage, // Explicit mapping guarantees Drizzle processes the key
     })
     .returning();
 
