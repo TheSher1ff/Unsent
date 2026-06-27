@@ -12,10 +12,11 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [cleared, setCleared] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sessionToken, setSessionToken] = useState<string | null>(null); // Securely holds the transient token
 
-  const { data: messages, isLoading, error } = useMessages(search);
+  // Destructured mutate to auto-refresh the data feed instantly on actions
+  const { data: messages, isLoading, error, mutate } = useMessages(search);
 
-  // Converted to async to securely hit our backend serverless function
   async function handleSearch(value: string) {
     if (value.startsWith(ADMIN_TRIGGER)) {
       const pwd = value.replace(ADMIN_TRIGGER, "").trim();
@@ -29,8 +30,11 @@ export default function Home() {
           body: JSON.stringify({ password: pwd }),
         });
 
-        if (response.ok) {
+        const data = await response.json();
+
+        if (response.ok && data.token) {
           setIsAdmin(true);
+          setSessionToken(data.token); // Safely keep the session signature hash in local memory
           setSearch("");
           return;
         }
@@ -44,6 +48,57 @@ export default function Home() {
     }
 
     setSearch(value);
+  }
+
+  // Centralized single-card deletion broker using the stored session token
+  async function handleCardDelete(messageId: number) {
+    if (!sessionToken) return;
+
+    try {
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "DELETE",
+        headers: {
+          "x-admin-key": sessionToken,
+        },
+      });
+
+      if (response.ok) {
+        // Trigger cache revalidation if mutate is available, otherwise fall back to reload
+        if (typeof mutate === "function") {
+          mutate();
+        } else {
+          window.location.reload();
+        }
+      } else {
+        alert("Failed to delete message");
+      }
+    } catch (err) {
+      console.error("❌ Delete network error:", err);
+      alert("An unexpected network error occurred.");
+    }
+  }
+
+  // Centralized full deck clear broker using the stored session token
+  async function handleWipeDeck() {
+    if (!confirm("Are you completely sure you want to wipe everything? This cannot be undone.")) return;
+    if (!sessionToken) return;
+
+    try {
+      const response = await fetch("/api/admin/wipe", {
+        method: "DELETE",
+        headers: {
+          "x-admin-key": sessionToken,
+        },
+      });
+
+      if (response.ok) {
+        setCleared(true);
+      } else {
+        alert("Failed to wipe the database.");
+      }
+    } catch (err) {
+      console.error("❌ Wipe error:", err);
+    }
   }
 
   return (
@@ -65,7 +120,7 @@ export default function Home() {
         {isAdmin && !isLoading && !error && (
           <div className="flex justify-end mb-6">
             <button
-              onClick={() => setCleared(true)}
+              onClick={handleWipeDeck}
               className="text-sm px-4 py-2 rounded-full bg-destructive text-destructive-foreground hover:opacity-90 transition"
             >
               Wipe Deck
@@ -130,6 +185,7 @@ export default function Home() {
                       message={message}
                       index={index}
                       isAdmin={isAdmin}
+                      onDelete={handleCardDelete} // Correctly pipe down tracking token parameters
                     />
                   ))
                 )}
