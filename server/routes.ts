@@ -30,6 +30,8 @@ export async function registerRoutes(
   /* ---------------- CREATE MESSAGE ---------------- */
   app.post(api.messages.create.path, async (req, res) => {
     try {
+      // Zod validation parses the payload. 
+      // Make sure your shared/routes.ts file's Zod schema includes: imageUrl: z.string().url().optional().nullable()
       const input = api.messages.create.input.parse(req.body);
       const message = await storage.createMessage(input);
       res.status(201).json(message);
@@ -101,18 +103,21 @@ async function seedDatabase() {
         toName: "Mark",
         content: "I saw you in my dream again",
         color: "#3b82f6",
+        imageUrl: null, // <-- Explicitly added for structural safety
       });
 
       await storage.createMessage({
         toName: "Jess",
         content: "It's been so long, I hope you moved on",
         color: "#ef4444",
+        imageUrl: null, // <-- Explicitly added for structural safety
       });
 
       await storage.createMessage({
         toName: "Finn",
         content: "I still think of you when I eat pancakes, I miss your pancakes",
         color: "#18181b",
+        imageUrl: null, // <-- Explicitly added for structural safety
       });
 
       console.log("✅ Database seeded");
