@@ -6,6 +6,7 @@ interface MessageCardProps {
   message: MessageResponse;
   index: number;
   isAdmin?: boolean;
+  onDelete?: (id: number) => void; // Unlocks instant execution with parent key state
 }
 
 // Map keys must remain entirely lowercase to match normalized lookups
@@ -22,6 +23,7 @@ export function MessageCard({
   message,
   index,
   isAdmin,
+  onDelete,
 }: MessageCardProps) {
   // Normalize the incoming color code string to lowercase for bulletproof lookups
   const normalizedColor = (message.color || "").toLowerCase().trim();
@@ -35,41 +37,11 @@ export function MessageCard({
 
   const splatClass = `paint-splat-${(index % 4) + 1}`;
 
-  async function handleDelete() {
+  function handleDeleteClick() {
     if (!confirm("Delete permanently?")) return;
-
-    const adminKey = prompt("Enter Admin Password:");
-    if (!adminKey) return;
-
-    try {
-      // 1. Check password against backend verification endpoint first
-      const verifyRes = await fetch("/api/admin/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: adminKey }),
-      });
-
-      if (!verifyRes.ok) {
-        alert("Wrong password");
-        return;
-      }
-
-      // 2. Execute deletion if backend verification succeeds
-      const deleteRes = await fetch(`/api/messages/${message.id}`, {
-        method: "DELETE",
-        headers: {
-          "x-admin-key": adminKey,
-        },
-      });
-
-      if (deleteRes.ok) {
-        window.location.reload();
-      } else {
-        alert("Failed to delete message");
-      }
-    } catch (err) {
-      console.error("❌ Delete error:", err);
-      alert("An unexpected error occurred.");
+    
+    if (onDelete) {
+      onDelete(message.id); // Triggers parent handler containing token state instantly
     }
   }
 
@@ -90,7 +62,7 @@ export function MessageCard({
     >
       {isAdmin && (
         <button
-          onClick={handleDelete}
+          onClick={handleDeleteClick}
           className="absolute top-3 right-3 z-20 text-red-600 text-sm font-bold opacity-70 hover:opacity-100"
           aria-label="Delete message"
         >
