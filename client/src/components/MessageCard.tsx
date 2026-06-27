@@ -41,14 +41,36 @@ export function MessageCard({
     const adminKey = prompt("Enter Admin Password:");
     if (!adminKey) return;
 
-    await fetch(`/api/messages/${message.id}`, {
-      method: "DELETE",
-      headers: {
-        "x-admin-key": import.meta.env.ADMIN_KEY,
-      },
-    });
+    try {
+      // 1. Check password against backend verification endpoint first
+      const verifyRes = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: adminKey }),
+      });
 
-    window.location.reload();
+      if (!verifyRes.ok) {
+        alert("Wrong password");
+        return;
+      }
+
+      // 2. Execute deletion if backend verification succeeds
+      const deleteRes = await fetch(`/api/messages/${message.id}`, {
+        method: "DELETE",
+        headers: {
+          "x-admin-key": adminKey,
+        },
+      });
+
+      if (deleteRes.ok) {
+        window.location.reload();
+      } else {
+        alert("Failed to delete message");
+      }
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+      alert("An unexpected error occurred.");
+    }
   }
 
   return (
