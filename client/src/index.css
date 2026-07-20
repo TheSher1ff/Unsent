@@ -157,3 +157,43 @@
   z-index: 50;
   opacity: 0.4;
 }
+/* ==============================
+   Custom Text Selection
+============================== */
+
+::selection {
+  background: rgb(229, 235, 194);
+  color: #293a56;
+}
+
+/* ==============================
+   Scrollbar (Firefox)
+============================== */
+
+html {
+  scrollbar-color: #293a56 #e9b4d2;
+  scrollbar-width: auto;
+}
+
+/* ==============================
+   Scrollbar (Chrome, Edge, Safari)
+============================== */
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e9b4d2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #293a56;
+  border-radius: 9999px;
+  border: 2px solid #e9b4d2;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3b5379;
+}
