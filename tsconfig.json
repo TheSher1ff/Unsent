@@ -1,5 +1,5 @@
 {
-  "include": ["server/**/*", "shared/**/*"],
+  "include": ["server/**/*", "shared/**/*", "api/**/*"],
   "exclude": [
     "node_modules",
     "dist",
