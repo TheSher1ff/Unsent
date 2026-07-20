@@ -13,7 +13,9 @@ if (!process.env.DATABASE_URL) {
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // REQUIRED for Render
+    // Supabase's connection pooler uses a certificate chain that Node
+    // doesn't trust by default; this is standard for managed Postgres.
+    rejectUnauthorized: false,
   },
 });
 
