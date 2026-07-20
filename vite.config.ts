@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  root: path.resolve(__dirname, "client"), // Ensures Vite knows where the frontend root is
+  root: path.resolve(__dirname, "client"),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client/src"),
@@ -12,7 +12,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.resolve(__dirname, "./dist"), // Keeps our output folder at the project root
+    outDir: path.resolve(__dirname, "./dist/public"),
     emptyOutDir: true,
   },
 });
